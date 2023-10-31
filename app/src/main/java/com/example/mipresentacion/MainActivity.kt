@@ -1,7 +1,5 @@
 package com.example.mipresentacion
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -35,7 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -165,65 +163,93 @@ fun InfoExtra() {
     var introduccion by remember { mutableStateOf("Soy un programador entusiasta, joven y con ganas de aprender. Desde pequeño me ha gustado la tecnología y me encanta estar horas programando delante del ordenador.") }
     var idioma by remember { mutableStateOf("English") }
     var trabajos by remember { mutableStateOf("Proyectos Realizados:") }
+    var github by remember { mutableStateOf("Mi codigo!") }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 30.dp, top = 50.dp, end = 30.dp)
     ) {
-        Text(text = introduccion,
-            color = Color(0, 70, 71, 255),
-            modifier = Modifier.height(125.dp)
-        )
-
-        Button(onClick = {
-                if (idioma == "English") {
-                    introduccion = "I am an enthusiastic programmer, young and eager to learn. Since I was a child I have loved technology and I love to spend hours programming in front of the computer."
-                    idioma = "Español"
-                    trabajos = "Projects Completed"
-                } else {
-                    introduccion = "Soy un programador entusiasta, joven y con ganas de aprender. Desde pequeño me ha gustado la tecnología y me encanta estar horas programando delante del ordenador."
-                    idioma = "English"
-                    trabajos = "Proyectos Realizados:"
-                }
-            },
-            modifier = Modifier.width(150.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color(0, 70, 71, 255)),
-            border = BorderStroke(1.dp, Color(0, 70, 71, 255))
+        Column(
+            modifier = Modifier.padding(start = 30.dp, top = 30.dp, end = 30.dp, bottom = 30.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = idioma)
+            Text(text = introduccion,
+                color = Color(0, 70, 71, 255),
+                modifier = Modifier
+                    .height(125.dp)
+            )
+            Button(onClick = {
+                    if (idioma == "English") {
+                        introduccion = "I am an enthusiastic programmer, young and eager to learn. Since I was a child I have loved technology and I love to spend hours programming in front of the computer."
+                        idioma = "Español"
+                        trabajos = "Projects Completed"
+                        github = "My code!"
+                    } else {
+                        introduccion = "Soy un programador entusiasta, joven y con ganas de aprender. Desde pequeño me ha gustado la tecnología y me encanta estar horas programando delante del ordenador."
+                        idioma = "English"
+                        trabajos = "Proyectos Realizados:"
+                        github = "Mi codigo!"
+                    }
+                },
+                modifier = Modifier.width(150.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color(0, 70, 71, 255)),
+                border = BorderStroke(1.dp, Color(0, 70, 71, 255))
+            ) {
+                Text(text = idioma)
+            }
         }
+        Proyectos(trabajos, github)
+    }
+}
 
+@Composable
+fun Proyectos(trabajos : String, github : String) {
+    Column(
+        modifier = Modifier
+            .background(Color(0, 70, 71, 255))
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
         Text(text = trabajos,
-            modifier = Modifier.padding(top = 50.dp),
-            color = Color(0, 70, 71, 255)
+            modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
+            color = Color.White
         )
 
         Row (
-            modifier = Modifier.padding(top = 30.dp)
+            modifier = Modifier.padding(bottom = 20.dp, start = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            val image = painterResource(R.drawable.primerproyecto)
-            val image2 = painterResource(R.drawable.segundoproyecto)
+            val primerproyecto = painterResource(R.drawable.primerproyecto)
+            val segundoproyecto = painterResource(R.drawable.segundoproyecto)
+
             Image(
-                painter = image,
+                painter = primerproyecto,
                 contentDescription = null,
-                modifier = Modifier.weight(1f))
-            Image(painter = image2,
+                modifier = Modifier.weight(1f)
+            )
+            Image(painter = segundoproyecto,
                 contentDescription = null,
-                modifier = Modifier.weight(1f))
+                modifier = Modifier.weight(1f)
+            )
         }
+        val localUriHandler = LocalUriHandler.current
 
-        val context = LocalContext.current
-        val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/")) }
-
-        Button(onClick = { context.startActivity(intent) }) {
-            Text(text = "Navigate to Google!")
+        Button(onClick = { localUriHandler.openUri("https://github.com/PabloRomeroAgudo/MiPresentacion") },
+            modifier = Modifier.width(150.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0, 70, 71, 255),
+                contentColor = Color.White
+            ),
+            border = BorderStroke(1.dp, Color.White)
+        ) {
+            Text(text = github)
         }
     }
-
 }
+
 
 @Preview(showBackground = true)
 @Composable
